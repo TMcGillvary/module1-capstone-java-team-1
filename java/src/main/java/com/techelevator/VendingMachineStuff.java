@@ -2,6 +2,7 @@ package com.techelevator;
 
 import com.techelevator.inventory.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,17 +39,29 @@ public class VendingMachineStuff {
         return inventory;
     }
 
+    public BigDecimal displayCurrentBalance() {
+        return piggyBank.getBalance();
+    }
+
+    public void feedMoney(int moneyInserted) {
+        piggyBank.feedMoney(new BigDecimal(moneyInserted));
+    }
+
     public String purchaseTheSnack(String selectedSlotId) {
+        String endMessage;
         try {
             VendingMachineItem snackInstance = mapCopy.get(selectedSlotId);
             snackInstance.subtract1FromInventory();
-            snackInstance.getDispensedMessage();
+            snackInstance.getDispensedMessage(); // FIX THIS
             piggyBank.subtractMoney(snackInstance.getCost());
+            String successfulPurchase = "Thank you for purchasing!";
+            return successfulPurchase;
             // add log here
         }
         catch (NullPointerException e) {
-            return "That's not a product";
-        } return "";
+            System.out.println("that's not a product");
+        }
+        return "That was not a successful purchase, please try again";
     }
 
 }
