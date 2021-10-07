@@ -1,16 +1,27 @@
 package com.techelevator;
 
 import com.techelevator.view.Menu;
+import com.techelevator.inventory.*;
+
+import java.io.IOException;
 
 public class VendingMachineCLI {
 
+	// Menu Choices
 	private static final String MAIN_MENU_OPTION_DISPLAY_ITEMS = "Display Vending Machine Items";
 	private static final String MAIN_MENU_OPTION_PURCHASE = "Purchase";
-	private static final String EXIT_PROGRAM = "exit";
+	private static final String EXIT_PROGRAM = "Exit";
 	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_DISPLAY_ITEMS, MAIN_MENU_OPTION_PURCHASE, EXIT_PROGRAM };
 
+	//Purchase Menu Choices
+	private static final String PURCHASE_MENU_OPTION_FEED_MONEY = "Feed Money";
+	private static final String PURCHASE_MENU_OPTION_SELECT_PRODUCT = "Select Product";
+	private static final String PURCHASE_MENU_OPTION_FINISH_TRANSACTION = "Finish Transaction";
+	private static final String[] PURCHASE_MENU_OPTIONS = { PURCHASE_MENU_OPTION_FEED_MONEY, PURCHASE_MENU_OPTION_SELECT_PRODUCT, PURCHASE_MENU_OPTION_FINISH_TRANSACTION };
+
+	// instance variables for VendingMachineCLI in order to run
 	private Menu menu;
-	private VendingMachineStuff vendingMachineStuff = new VendingMachineStuff();
+
 
 	public VendingMachineCLI(Menu menu) {
 		this.menu = menu;
@@ -23,21 +34,63 @@ public class VendingMachineCLI {
 			if (choice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
 				// display vending machine items
 
-				vendingMachineStuff.getInventoryListAsString();
+				// added
+				menu.displayInventoryFileCorrectly();
 
 			} else if (choice.equals(MAIN_MENU_OPTION_PURCHASE)) {
-				// do purchase
+
+				while (true) {
+					// do purchase
+					String purchaseChoice = (String) menu.getChoiceFromPurchaseOptions(PURCHASE_MENU_OPTIONS);
+
+					switch (purchaseChoice) {
+						case PURCHASE_MENU_OPTION_FEED_MONEY:
+							// do the stuff
+							menu.addMoneyToVendingMachine();
+							break;
+						case PURCHASE_MENU_OPTION_SELECT_PRODUCT:
+							menu.displayInventoryFileCorrectly();
+							menu.getUserInputForProductSelection();
+							break;
+						case PURCHASE_MENU_OPTION_FINISH_TRANSACTION:
+							// do the last stuff
+							// kick back to main menu
+							break;
+					}
+				}
+
 			} else if (choice.equals(EXIT_PROGRAM)){
-				System.out.println("Thanks for playing!");
+				printExitBanner();
 				System.exit(0);
 			}
 		}
 	}
 
 	public static void main(String[] args) {
+		// added
+		printApplicationBanner();
+
 		Menu menu = new Menu(System.in, System.out);
 		VendingMachineCLI cli = new VendingMachineCLI(menu);
 		cli.run();
+	}
+
+
+	// for fun
+	private static void printApplicationBanner() {
+		System.out.println("********************************************");
+		System.out.println("*****              WELCOME             *****");
+		System.out.println("*****              to the              *****");
+		System.out.println("*****          VENDO-MATIC 800         *****");
+		System.out.println("********************************************");
+	}
+
+	private static void printExitBanner() {
+		System.out.println("********************************************");
+		System.out.println("*****                                  *****");
+		System.out.println("*****       Thanks for playing!        *****");
+		System.out.println("*****                                  *****");
+		System.out.println("********************************************");
 	}
 
 

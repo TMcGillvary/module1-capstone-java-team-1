@@ -1,5 +1,7 @@
 package com.techelevator;
 
+import com.techelevator.inventory.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
@@ -36,18 +38,22 @@ public class FileImporter {
             String itemType = snackPiece[3];
 
             switch (itemType) {
-                case "chips":
+                case "Chips":
                     Chips newChip = new Chips(name, cost);
                     inventoryMap.put(slotID, newChip);
-                case "candy":
+                    break;
+                case "Candy":
                     Candy newCandy = new Candy(name, cost);
                     inventoryMap.put(slotID, newCandy);
-                case "drink":
+                    break;
+                case "Drink":
                     Drink newDrink = new Drink(name, cost);
                     inventoryMap.put(slotID, newDrink);
-                case "gum":
+                    break;
+                case "Gum":
                     Gum newGum = new Gum(name, cost);
                     inventoryMap.put(slotID, newGum);
+                    break;
             }
 
         }

@@ -1,4 +1,4 @@
-package com.techelevator;
+package com.techelevator.inventory;
 
 import java.math.BigDecimal;
 
@@ -27,5 +27,13 @@ public abstract class VendingMachineItem implements Stockable {
     public int getStockLevel() {
         return stockLevel;
     }
+
+    @Override
+    public void subtract1FromInventory() {
+        this.stockLevel = this.stockLevel - 1;
+    }
+
+    // Dispensed Message goes here? inherited from sub classes
+    public abstract String getDispensedMessage();
 
 }
