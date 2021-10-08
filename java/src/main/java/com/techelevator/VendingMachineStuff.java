@@ -13,11 +13,13 @@ public class VendingMachineStuff {
     private FileImporter vendingMachineFile;
     private PiggyBank piggyBank;
     private LinkedHashMap<String, VendingMachineItem> mapCopy;
+    private  AuditLog auditLog;
 
     public VendingMachineStuff(FileImporter vendingMachineFile) {
         this.vendingMachineFile = vendingMachineFile;
         piggyBank = new PiggyBank();
         mapCopy = vendingMachineFile.createInventoryMap();
+        auditLog = new AuditLog();
     }
 
     // make copy of inventory list from File Importer and convert to String for display
@@ -45,21 +47,33 @@ public class VendingMachineStuff {
 
     public void feedMoney(int moneyInserted) {
         piggyBank.feedMoney(new BigDecimal(moneyInserted));
+        auditLog.addToAuditLog("FEED MONEY:", new BigDecimal(moneyInserted), piggyBank.getBalance());
     }
 
     public String purchaseTheSnack(String selectedSlotId) {
 
         try {
             VendingMachineItem snackInstance = mapCopy.get(selectedSlotId);
-            snackInstance.subtract1FromInventory();
-            piggyBank.subtractMoney(snackInstance.getCost());
-            return snackInstance.getDispensedMessage() + "\nThank you for purchasing!";
-            // add log here
+
+            if (snackInstance.getStockLevel() == 0) {
+                System.out.println("Sorry, that's sold out. Try again.");
+            } else {
+                BigDecimal balanceBeforePurchase = piggyBank.getBalance();
+                snackInstance.subtract1FromInventory();
+                piggyBank.subtractMoney(snackInstance.getCost());
+                auditLog.addToAuditLog(snackInstance.getName() + " " + selectedSlotId, balanceBeforePurchase, piggyBank.getBalance());
+                return snackInstance.getDispensedMessage() + "\nYou selected " + snackInstance.getName() + " for $" + snackInstance.getCost() +
+                        ". Your remaining balance is " + piggyBank.getBalance();
+            }
         }
         catch (NullPointerException e) {
             System.out.println("that's not a product");
         }
         return "That was not a successful purchase, please try again";
     }
-
+    public String returnChangeFromPiggyBank() {
+        String finishedPurchase = piggyBank.giveChange(piggyBank.getBalance());
+        auditLog.addToAuditLog("GIVE CHANGE:", piggyBank.getBalance(), new BigDecimal("0.00"));
+        return finishedPurchase;
+    }
 }

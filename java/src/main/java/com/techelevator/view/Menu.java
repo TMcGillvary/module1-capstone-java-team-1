@@ -148,8 +148,12 @@ public class Menu {
 
 	public void getUserInputForProductSelection() {
 		System.out.println("Please select from the above list");
-		String selectedSlotId = in.nextLine();
+		String selectedSlotId = in.nextLine().toUpperCase();
 		String purchasedItem = vendingMachine.purchaseTheSnack(selectedSlotId);
 		System.out.println(purchasedItem);
+	}
+
+	public void finishTransaction() {
+		System.out.println(vendingMachine.returnChangeFromPiggyBank());
 	}
 }

@@ -39,6 +39,7 @@ public class VendingMachineCLI {
 
 			} else if (choice.equals(MAIN_MENU_OPTION_PURCHASE)) {
 
+				manuLoop:
 				while (true) {
 					// do purchase
 					String purchaseChoice = (String) menu.getChoiceFromPurchaseOptions(PURCHASE_MENU_OPTIONS);
@@ -53,9 +54,8 @@ public class VendingMachineCLI {
 							menu.getUserInputForProductSelection();
 							break;
 						case PURCHASE_MENU_OPTION_FINISH_TRANSACTION:
-							// do the last stuff
-							// kick back to main menu
-							break;
+							menu.finishTransaction();
+							break manuLoop;
 					}
 				}
 
