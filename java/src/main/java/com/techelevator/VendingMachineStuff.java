@@ -48,14 +48,12 @@ public class VendingMachineStuff {
     }
 
     public String purchaseTheSnack(String selectedSlotId) {
-        String endMessage;
+
         try {
             VendingMachineItem snackInstance = mapCopy.get(selectedSlotId);
             snackInstance.subtract1FromInventory();
-            snackInstance.getDispensedMessage(); // FIX THIS
             piggyBank.subtractMoney(snackInstance.getCost());
-            String successfulPurchase = "Thank you for purchasing!";
-            return successfulPurchase;
+            return snackInstance.getDispensedMessage() + "\nThank you for purchasing!";
             // add log here
         }
         catch (NullPointerException e) {
