@@ -59,6 +59,7 @@ public class VendingMachineStuff {
             BigDecimal currentBalance = piggyBank.getBalance();
 
             if (snackInstance.getStockLevel() == 0) {
+                //TODO consider making an exception
                 System.out.println("Sorry, that's sold out. Try again.");
             } else if (currentBalance.subtract(snackInstance.getCost()).compareTo(BigDecimal.ZERO) <= 0) {
                 System.out.println("Sorry, you do not have enough money, please add more and try again.");
@@ -86,5 +87,9 @@ public class VendingMachineStuff {
         String finishedPurchase = piggyBank.giveChange(piggyBank.getBalance());
         auditLog.addToAuditLog("GIVE CHANGE:", balanceBeforePurchase, new BigDecimal("0.00"));
         return finishedPurchase;
+    }
+
+    public void createSalesReport() {
+        salesReport.writeSaleReportFile();
     }
 }

@@ -50,9 +50,14 @@ public class Menu {
     }
 
     private void displayMenuOptions(Object[] options) {
+
         out.println();
         for (int i = 0; i < options.length; i++) {
             int optionNum = i + 1;
+            String hiddenOption = String.valueOf(options[i]);
+            if (hiddenOption.endsWith("1")) {
+            	continue;
+			}
             // if option contains,ends etc *, continue
             out.println(optionNum + ") " + options[i]);
         }
@@ -153,4 +158,8 @@ public class Menu {
     public void finishTransaction() {
         System.out.println(vendingMachine.returnChangeFromPiggyBank());
     }
+
+    public void createSalesReport() {
+    	vendingMachine.createSalesReport();
+	}
 }
