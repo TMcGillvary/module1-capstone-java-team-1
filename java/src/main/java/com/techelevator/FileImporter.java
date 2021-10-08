@@ -5,10 +5,7 @@ import com.techelevator.inventory.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class FileImporter {
 
@@ -26,8 +23,8 @@ public class FileImporter {
         return listFromFile;
     }
 
-    public LinkedHashMap<String, VendingMachineItem> createInventoryMap() {
-        LinkedHashMap<String, VendingMachineItem> inventoryMap = new LinkedHashMap<String, VendingMachineItem>();
+    public Map<String, VendingMachineItem> createInventoryMap() {
+        Map<String, VendingMachineItem> inventoryMap = new LinkedHashMap<String, VendingMachineItem>();
 
         for (String currentLine : createFileList()) {
             String[] snackPiece = currentLine.split("\\|");

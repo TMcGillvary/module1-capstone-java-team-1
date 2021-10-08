@@ -4,7 +4,6 @@ import com.techelevator.inventory.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +11,7 @@ public class VendingMachineStuff {
 
     private FileImporter vendingMachineFile;
     private PiggyBank piggyBank;
-    private LinkedHashMap<String, VendingMachineItem> mapCopy;
+    private Map<String, VendingMachineItem> mapCopy;
     private AuditLog auditLog;
     private SalesReport salesReport;
 

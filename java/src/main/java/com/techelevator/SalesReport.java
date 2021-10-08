@@ -9,20 +9,19 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class SalesReport {
 
     // instance variables
-    private String fileName = setDateTimeFormat();
+    private String fileName = setDateTimeFormat() + ".txt";
 
     private File salesReportFile = new File(fileName);
     private int totalSales = 0;
-    private LinkedHashMap<String, VendingMachineItem> mapCopy;
+    private Map<String, VendingMachineItem> mapCopy;
     private Map<String, Integer> salesReportMap = new HashMap<String, Integer>();
 
-    public SalesReport(LinkedHashMap<String, VendingMachineItem> mapCopy) {
+    public SalesReport(Map<String, VendingMachineItem> mapCopy) {
         for (Map.Entry<String, VendingMachineItem> entry : mapCopy.entrySet()) {
             VendingMachineItem snackInstance = mapCopy.get(entry.getKey());
             for (int i = 0; i < mapCopy.size(); i++) {
