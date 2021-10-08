@@ -51,8 +51,8 @@ public class PiggyBank {
                 counter = counter.subtract(nickel);
             }
         }
-        this.balance = new BigDecimal(0);
-        String returnMessage = "Your change is " + totalQuartersToReturn + " quarters, " + totalDimesToReturn + " dimes, " + totalNickelsToReturn + " nickels.";
+        this.balance = new BigDecimal("0.00");
+        String returnMessage = "Your change is " + totalQuartersToReturn + " quarters, " + totalDimesToReturn + " dimes, & " + totalNickelsToReturn + " nickels.";
         return returnMessage;
     }
 }

@@ -38,8 +38,9 @@ public class AuditLog {
         return date;
     }
 
-    public String addToAuditLog(String event, BigDecimal beforeTransaction, BigDecimal afterTransaction) {
+    public void addToAuditLog(String event, BigDecimal beforeTransaction, BigDecimal afterTransaction) {
         String beforeTransactionString = String.valueOf(beforeTransaction);
+        // feedMoney not formatting correctly, how to fix??
         String afterTransactionString = String.valueOf(afterTransaction);
         String printString = String.format("%s %s $%s $%s", setDateTimeFormat(), event, beforeTransactionString, afterTransactionString);
 
@@ -50,6 +51,5 @@ public class AuditLog {
             //not write to file
         }
 
-        return printString;
     }
 }

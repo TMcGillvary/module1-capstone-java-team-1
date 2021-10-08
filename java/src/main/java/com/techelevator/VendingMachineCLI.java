@@ -34,19 +34,17 @@ public class VendingMachineCLI {
 			if (choice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
 				// display vending machine items
 
-				// added
 				menu.displayInventoryFileCorrectly();
 
 			} else if (choice.equals(MAIN_MENU_OPTION_PURCHASE)) {
 
-				manuLoop:
+				menuLoop:
 				while (true) {
 					// do purchase
 					String purchaseChoice = (String) menu.getChoiceFromPurchaseOptions(PURCHASE_MENU_OPTIONS);
 
 					switch (purchaseChoice) {
 						case PURCHASE_MENU_OPTION_FEED_MONEY:
-							// do the stuff
 							menu.addMoneyToVendingMachine();
 							break;
 						case PURCHASE_MENU_OPTION_SELECT_PRODUCT:
@@ -55,13 +53,13 @@ public class VendingMachineCLI {
 							break;
 						case PURCHASE_MENU_OPTION_FINISH_TRANSACTION:
 							menu.finishTransaction();
-							break manuLoop;
+							break menuLoop;
 					}
 				}
 
 			} else if (choice.equals(EXIT_PROGRAM)){
 				printExitBanner();
-				System.exit(0);
+				return;
 			}
 		}
 	}
