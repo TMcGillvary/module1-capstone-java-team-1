@@ -48,7 +48,10 @@ public class VendingMachineStuff {
 
     public void feedMoney(BigDecimal moneyInserted) {
         piggyBank.feedMoney(moneyInserted);
-        auditLog.addToAuditLog("FEED MONEY:", moneyInserted, piggyBank.getBalance());
+        String moneyInsertedString = String.valueOf(moneyInserted);
+        String moneyFormattedCorrectly = moneyInsertedString + ".00";
+        BigDecimal fixedMoney = new BigDecimal(moneyFormattedCorrectly);
+        auditLog.addToAuditLog("FEED MONEY:", fixedMoney, piggyBank.getBalance());
     }
 
     public String purchaseTheSnack(String selectedSlotId) {
@@ -58,26 +61,26 @@ public class VendingMachineStuff {
             BigDecimal currentBalance = piggyBank.getBalance();
 
             if (snackInstance.getStockLevel() == 0) {
-                //TODO consider making an exception
-                System.out.println("Sorry, that's sold out. Try again.");
+                throw new VendingMachineException("Sorry, that's sold out. Try again.");
             } else if (currentBalance.subtract(snackInstance.getCost()).compareTo(BigDecimal.ZERO) <= 0) {
-                System.out.println("Sorry, you do not have enough money, please add more and try again.");
+                throw new VendingMachineException("Sorry, you do not have enough money, please add more and try again.");
             } else {
                 BigDecimal balanceBeforePurchase = piggyBank.getBalance();
                 snackInstance.subtract1FromInventory();
                 piggyBank.subtractMoney(snackInstance.getCost());
+                BigDecimal balanceAfterPurchase = piggyBank.getBalance();
 
-                auditLog.addToAuditLog(snackInstance.getName() + " " + selectedSlotId, balanceBeforePurchase, currentBalance);
+                auditLog.addToAuditLog(snackInstance.getName() + " " + selectedSlotId, balanceBeforePurchase, balanceAfterPurchase);
 
-                salesReport.incrementTotalSales(snackInstance.getName());
+                salesReport.incrementTotalItemSales(snackInstance.getName());
+                salesReport.incrementTotalGrossSales(snackInstance.getCost());
 
                 return snackInstance.getDispensedMessage() + "\nYou selected " + snackInstance.getName() + " for $" + snackInstance.getCost() +
-                        ". Your remaining balance is " + currentBalance;
+                        ". Your remaining balance is " + balanceAfterPurchase;
             }
         } catch (NullPointerException e) {
-            System.out.println("That's not a product, please try again.");
+            throw new VendingMachineException("That's not a product, please try again.");
         }
-        return "That was not a successful purchase, please try again.";
     }
 
 

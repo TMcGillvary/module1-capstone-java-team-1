@@ -1,6 +1,7 @@
 package com.techelevator.view;
 
 import com.techelevator.FileImporter;
+import com.techelevator.VendingMachineException;
 import com.techelevator.VendingMachineStuff;
 
 import java.io.InputStream;
@@ -131,7 +132,7 @@ public class Menu {
             in.nextLine();
 
             if (moneyInserted == 0) {
-                System.out.println("You didn't enter any money!");
+                throw new VendingMachineException("You didn't enter any money!");
             } else {
                 vendingMachine.feedMoney(new BigDecimal((moneyInserted)));
                 System.out.println("Thanks, money inserted!");
@@ -139,7 +140,7 @@ public class Menu {
             }
 
         } catch (InputMismatchException e) {
-            System.out.println("Not a whole dollar amount, please try again");
+            throw new VendingMachineException("Not a whole dollar amount, please try again");
         }
     }
 

@@ -29,7 +29,7 @@ public class AuditLog {
             auditLogFile.createNewFile();
         }
         catch (IOException e) {
-            //could not create new file
+            throw new VendingMachineException("Unable to create new file, please try again");
         }
     }
 
@@ -42,13 +42,13 @@ public class AuditLog {
         String beforeTransactionString = String.valueOf(beforeTransaction);
         // feedMoney not formatting correctly, how to fix??
         String afterTransactionString = String.valueOf(afterTransaction);
-        String printString = String.format("%s %s $%s $%s", setDateTimeFormat(), event, beforeTransactionString, afterTransactionString);
+        String printString = String.format("%s %-18s $%-6s $%-6s", setDateTimeFormat(), event, beforeTransactionString, afterTransactionString);
 
         try (PrintWriter auditLogWriter = new PrintWriter(new FileWriter(auditLogFile, true))) {
             auditLogWriter.println(printString);
         }
         catch (IOException e) {
-            //not write to file
+            throw new VendingMachineException("Unable to add to file, please try again");
         }
 
     }
