@@ -4,12 +4,11 @@ import com.techelevator.FileImporter;
 import com.techelevator.VendingMachineException;
 import com.techelevator.VendingMachineStuff;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
@@ -57,8 +56,8 @@ public class Menu {
             int optionNum = i + 1;
             String hiddenOption = String.valueOf(options[i]);
             if (hiddenOption.endsWith("1")) {
-            	continue;
-			}
+                continue;
+            }
             // if option contains,ends etc *, continue
             out.println(optionNum + ") " + options[i]);
         }
@@ -68,9 +67,6 @@ public class Menu {
 
     /**
      * Create Purchase Options Menu Stuff
-     *
-     * @param options
-     * @return
      */
 
     public Object getChoiceFromPurchaseOptions(Object[] options) {
@@ -114,9 +110,11 @@ public class Menu {
 
     // print out with each entry on a line rather than one giant block list
     public void displayInventoryFileCorrectly() {
+
         for (String eachLine : vendingMachine.getInventoryListAsString()) {
             System.out.println(eachLine);
         }
+        System.out.println("══════════════════════════════════════════");
     }
 
 
@@ -126,21 +124,22 @@ public class Menu {
 
     // get user input to feed money into vending machine
     public void addMoneyToVendingMachine() {
-        System.out.println("Please insert the money in whole dollar amounts");
+
         try {
-            int moneyInserted = in.nextInt();
-            in.nextLine();
+            int moneyInserted = Integer.parseInt(in.nextLine());
 
             if (moneyInserted == 0) {
                 throw new VendingMachineException("You didn't enter any money!");
             } else {
                 vendingMachine.feedMoney(new BigDecimal((moneyInserted)));
-                System.out.println("Thanks, money inserted!");
-                System.out.println("===============================");
+                System.out.println("════════ Money Successfully Inserted! ════════");
+                System.out.println();
             }
 
-        } catch (InputMismatchException e) {
-            throw new VendingMachineException("Not a whole dollar amount, please try again");
+        } catch (NumberFormatException e) {
+            System.out.println("Not a whole dollar amount, please try again");
+        } catch (VendingMachineException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -150,17 +149,25 @@ public class Menu {
      */
 
     public void getUserInputForProductSelection() {
-        System.out.println("Please select from the above list");
         String selectedSlotId = in.nextLine().toUpperCase();
-        String purchasedItem = vendingMachine.purchaseTheSnack(selectedSlotId);
-        System.out.println(purchasedItem);
+        try {
+            System.out.println("══════════════════════════════════════════");
+            String purchasedItem = vendingMachine.purchaseTheSnack(selectedSlotId);
+            System.out.println(purchasedItem);
+            System.out.println();
+        } catch (VendingMachineException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
+    /**
+     * Option 3: Finish Transaction
+     */
     public void finishTransaction() {
         System.out.println(vendingMachine.returnChangeFromPiggyBank());
     }
 
     public void createSalesReport() {
-    	vendingMachine.createSalesReport();
-	}
+        vendingMachine.createSalesReport();
+    }
 }

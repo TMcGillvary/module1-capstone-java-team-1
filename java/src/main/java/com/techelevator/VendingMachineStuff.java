@@ -2,6 +2,7 @@ package com.techelevator;
 
 import com.techelevator.inventory.*;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,14 +10,12 @@ import java.util.Map;
 
 public class VendingMachineStuff {
 
-    private FileImporter vendingMachineFile;
     private PiggyBank piggyBank;
     private Map<String, VendingMachineItem> mapCopy;
     private AuditLog auditLog;
     private SalesReport salesReport;
 
     public VendingMachineStuff(FileImporter vendingMachineFile) {
-        this.vendingMachineFile = vendingMachineFile;
         piggyBank = new PiggyBank();
         mapCopy = vendingMachineFile.createInventoryMap();
         auditLog = new AuditLog();
@@ -48,9 +47,8 @@ public class VendingMachineStuff {
 
     public void feedMoney(BigDecimal moneyInserted) {
         piggyBank.feedMoney(moneyInserted);
-        String moneyInsertedString = String.valueOf(moneyInserted);
-        String moneyFormattedCorrectly = moneyInsertedString + ".00";
-        BigDecimal fixedMoney = new BigDecimal(moneyFormattedCorrectly);
+        String moneyInsertedString = moneyInserted + ".00";
+        BigDecimal fixedMoney = new BigDecimal(moneyInsertedString);
         auditLog.addToAuditLog("FEED MONEY:", fixedMoney, piggyBank.getBalance());
     }
 
@@ -61,9 +59,9 @@ public class VendingMachineStuff {
             BigDecimal currentBalance = piggyBank.getBalance();
 
             if (snackInstance.getStockLevel() == 0) {
-                throw new VendingMachineException("Sorry, that's sold out. Try again.");
-            } else if (currentBalance.subtract(snackInstance.getCost()).compareTo(BigDecimal.ZERO) <= 0) {
-                throw new VendingMachineException("Sorry, you do not have enough money, please add more and try again.");
+                throw new VendingMachineException("That's out of stock! Please choose an in stock item.");
+            } else if (currentBalance.subtract(snackInstance.getCost()).compareTo(BigDecimal.ZERO) < 0) {
+                throw new VendingMachineException("That costs more money than what you have! Please enter more money and try again.");
             } else {
                 BigDecimal balanceBeforePurchase = piggyBank.getBalance();
                 snackInstance.subtract1FromInventory();
@@ -75,11 +73,12 @@ public class VendingMachineStuff {
                 salesReport.incrementTotalItemSales(snackInstance.getName());
                 salesReport.incrementTotalGrossSales(snackInstance.getCost());
 
-                return snackInstance.getDispensedMessage() + "\nYou selected " + snackInstance.getName() + " for $" + snackInstance.getCost() +
-                        ". Your remaining balance is " + balanceAfterPurchase;
+                return "You selected " + snackInstance.getName() + " for $" + snackInstance.getCost() + "."
+                        + "\n" + snackInstance.getDispensedMessage()
+                        + "\nYour remaining balance is $" + balanceAfterPurchase + ".";
             }
         } catch (NullPointerException e) {
-            throw new VendingMachineException("That's not a product, please try again.");
+            throw new VendingMachineException("That's not a product! Please enter the Slot ID.");
         }
     }
 

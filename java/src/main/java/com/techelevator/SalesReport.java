@@ -2,25 +2,19 @@ package com.techelevator;
 
 import com.techelevator.inventory.VendingMachineItem;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+
 public class SalesReport {
 
     // instance variables
-    private String fileName = setDateTimeFormat() + ".txt";
-
-    private File salesReportFile = new File(fileName);
-    private int totalItemSales = 0;
     private BigDecimal totalGrossSales = new BigDecimal("0.00");
-    private Map<String, VendingMachineItem> mapCopy;
     private Map<String, Integer> salesReportMap = new LinkedHashMap<>();
 
+    // constructor
     public SalesReport(Map<String, VendingMachineItem> mapCopy) {
         for (Map.Entry<String, VendingMachineItem> entry : mapCopy.entrySet()) {
             VendingMachineItem snackInstance = mapCopy.get(entry.getKey());
@@ -28,6 +22,7 @@ public class SalesReport {
                 salesReportMap.put(snackInstance.getName(), 0);
             }
         }
+
     }
 
     // helper Methods
@@ -37,7 +32,7 @@ public class SalesReport {
         List<String> salesReportInventory = new ArrayList<String>();
 
         for (Map.Entry<String, Integer> entry : salesReportMap.entrySet()) {
-                        // format the displayInventory
+            // format the displayInventory
             String formattedInventory = String.format("%-18s | %d", entry.getKey(), entry.getValue());
             // add to output list
             salesReportInventory.add(formattedInventory);
@@ -45,36 +40,28 @@ public class SalesReport {
         return salesReportInventory;
     }
 
-    private String setDateTimeFormat() {
-        String date = new SimpleDateFormat("MM-dd-yyyy_hh-mm-ss a").format(new Date());
+    private String getCurrentTime() {
+        String date = new SimpleDateFormat("MM-dd-yyyy hh-mm-ss a").format(new Date(System.currentTimeMillis()));
         return date;
-    }
-
-    private void createNewSalesLog() {
-        try {
-            salesReportFile.createNewFile();
-        }
-        catch (IOException e) {
-            throw new VendingMachineException("Unable to create new file, please try again");
-        }
     }
 
     public void incrementTotalItemSales(String itemName) {
 
         if (salesReportMap.containsKey(itemName)) {
-            totalItemSales++;
-            salesReportMap.put(itemName, totalItemSales);
+            int totalItemSales = salesReportMap.get(itemName);
+            salesReportMap.put(itemName, totalItemSales + 1);
         }
-
     }
 
     public void incrementTotalGrossSales(BigDecimal itemCost) {
-       totalGrossSales = totalGrossSales.add(itemCost);
+        totalGrossSales = totalGrossSales.add(itemCost);
     }
 
     public void writeSaleReportFile() {
 
-        createNewSalesLog();
+        String fileName = getCurrentTime() + ".txt";
+
+        File salesReportFile = new File(fileName);
 
         try (PrintWriter salesReportWriter = new PrintWriter(salesReportFile)) {
 
@@ -88,9 +75,5 @@ public class SalesReport {
         } catch (FileNotFoundException e) {
             throw new VendingMachineException("Unable to add to file, please try again");
         }
-    }
-
-    public int getTotalItemSales() {
-        return totalItemSales;
     }
 }
