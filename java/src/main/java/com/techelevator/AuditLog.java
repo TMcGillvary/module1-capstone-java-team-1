@@ -16,7 +16,6 @@ public class AuditLog {
     //before and after transaction
 
     private String fileName = "Log.txt";
-    private boolean doesFileExist = new File(fileName).delete();
     private File auditLogFile = new File(fileName);
 
     public AuditLog() {

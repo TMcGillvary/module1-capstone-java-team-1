@@ -2,11 +2,15 @@ package com.techelevator;
 
 import com.techelevator.inventory.Chips;
 import com.techelevator.inventory.VendingMachineItem;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 public class VendingMachineStuffTest {
@@ -18,7 +22,7 @@ public class VendingMachineStuffTest {
     public void sold_out_inventory_displays_correctly() {
 
         // Arrange
-        vendingMachine.feedMoney(new BigDecimal("20.00"));
+        vendingMachine.feedMoney(new BigDecimal("20"));
         vendingMachine.purchaseTheSnack("A1");
         vendingMachine.purchaseTheSnack("A1");
         vendingMachine.purchaseTheSnack("A1");
@@ -37,7 +41,7 @@ public class VendingMachineStuffTest {
     @Test
     public void display_current_balance_displays_correctly() {
         // Arrange
-        vendingMachine.feedMoney(new BigDecimal("20.00"));
+        vendingMachine.feedMoney(new BigDecimal("20"));
 
         // Act
         String actual = String.valueOf(vendingMachine.displayCurrentBalance());
@@ -47,21 +51,17 @@ public class VendingMachineStuffTest {
         Assert.assertEquals(expected, actual);
     }
 
-    @Test
+    @Test (expected = VendingMachineException.class)
     public void snack_purchase_fails_if_no_money() {
 
-        //Act
-        String actual = vendingMachine.purchaseTheSnack("A1");
-        String expected = "That was not a successful purchase, please try again.";
+        vendingMachine.purchaseTheSnack("A1");
 
-        //Assert
-        Assert.assertEquals(expected, actual);
     }
 
-    @Test
+    @Test (expected = VendingMachineException.class)
     public void snack_purchase_fails_if_OOS() {
         //Arrange
-        vendingMachine.feedMoney(new BigDecimal("20.00"));
+        vendingMachine.feedMoney(new BigDecimal("20"));
         vendingMachine.purchaseTheSnack("A1");
         vendingMachine.purchaseTheSnack("A1");
         vendingMachine.purchaseTheSnack("A1");
@@ -69,33 +69,77 @@ public class VendingMachineStuffTest {
         vendingMachine.purchaseTheSnack("A1");
 
         //Act
-        String actual = vendingMachine.purchaseTheSnack("A1");
-        String expected = "That was not a successful purchase, please try again.";
+        vendingMachine.purchaseTheSnack("A1");
+
 
         //Assert
-        Assert.assertEquals(expected, actual);
+
 
     }
 
-    @Test
+    @Test (expected = VendingMachineException.class)
     public void snack_purchase_fails_if_not_valid_product_id() {
         // Act
-        String actual = vendingMachine.purchaseTheSnack("A11");
-        String expected = "That was not a successful purchase, please try again.";
+        vendingMachine.purchaseTheSnack("A11");
 
         //Assert
-        Assert.assertEquals(expected, actual);
+
     }
 
     @Test
     public void snack_purchased_successfully() {
         //Arrange
-        vendingMachine.feedMoney(new BigDecimal("20.00"));
+        vendingMachine.feedMoney(new BigDecimal("20"));
 
         //Act
         String actual = vendingMachine.purchaseTheSnack("A1");
         String expected = "Crunch Crunch, Yum!\n" +
-                "You selected Potato Crisps for $3.05. Your remaining balance is 20.00";
+                "You selected Potato Crisps for $3.05. Your remaining balance is 16.95";
+
+        // Assert
+        Assert.assertEquals(expected, actual);
+
+    }
+
+    @Test
+    public void snack_Candy_purchased_successfully() {
+        //Arrange
+        vendingMachine.feedMoney(new BigDecimal("20"));
+
+        //Act
+        String actual = vendingMachine.purchaseTheSnack("B1");
+        String expected = "Munch Munch, Yum!\n" +
+                "You selected Moonpie for $1.80. Your remaining balance is 18.20";
+
+        // Assert
+        Assert.assertEquals(expected, actual);
+
+    }
+
+    @Test
+    public void snack_Drink_purchased_successfully() {
+        //Arrange
+        vendingMachine.feedMoney(new BigDecimal("20"));
+
+        //Act
+        String actual = vendingMachine.purchaseTheSnack("C3");
+        String expected = "Glug Glug, Yum!\n" +
+                "You selected Mountain Melter for $1.50. Your remaining balance is 18.50";
+
+        // Assert
+        Assert.assertEquals(expected, actual);
+
+    }
+
+    @Test
+    public void snack_Gum_purchased_successfully() {
+        //Arrange
+        vendingMachine.feedMoney(new BigDecimal("20"));
+
+        //Act
+        String actual = vendingMachine.purchaseTheSnack("D2");
+        String expected = "Chew Chew, Yum!\n" +
+                "You selected Little League Chew for $0.95. Your remaining balance is 19.05";
 
         // Assert
         Assert.assertEquals(expected, actual);
@@ -105,7 +149,7 @@ public class VendingMachineStuffTest {
     @Test
     public void change_returns_correctly() {
         // Arrange
-        vendingMachine.feedMoney(new BigDecimal("1.00"));
+        vendingMachine.feedMoney(new BigDecimal("1"));
 
         // Act
         String actual = vendingMachine.returnChangeFromPiggyBank();

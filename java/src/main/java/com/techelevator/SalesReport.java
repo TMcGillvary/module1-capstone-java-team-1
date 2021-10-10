@@ -28,7 +28,6 @@ public class SalesReport {
                 salesReportMap.put(snackInstance.getName(), 0);
             }
         }
-        createNewSalesLog();
     }
 
     // helper Methods
@@ -74,6 +73,8 @@ public class SalesReport {
     }
 
     public void writeSaleReportFile() {
+
+        createNewSalesLog();
 
         try (PrintWriter salesReportWriter = new PrintWriter(salesReportFile)) {
 
